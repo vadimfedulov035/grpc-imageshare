@@ -1,0 +1,5 @@
+go run ./cmd/client -addr localhost:50051 -cert ./certs/server.crt -list
+
+echo "Test data from host" > test.txt && go run ./cmd/client/main.go -addr localhost:50051 -cert ./certs/server.crt -upload ./my_host_file.txt
+
+go run ./cmd/client/main.go -addr localhost:50051 -cert ./certs/server.crt -download test.txt -output ./test

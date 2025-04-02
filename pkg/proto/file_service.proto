@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/vadimfedulov035/grpc-imageshare/pkg/proto";
+
+service FileService {
+  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+
+  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileResponse);
+
+  rpc ListFiles(google.protobuf.Empty) returns (ListFilesResponse);
+}
+
+// --- Upload Messages ---
+
+message UploadFileRequest {
+  oneof data {
+    string filename = 1;  // First message: file name
+    bytes chunk_data = 2; // Later messages: file chunks
+  }
+}
+
+message UploadFileResponse {
+  string message = 1;
+  string filename = 2;
+  uint64 size = 3;
+}
+
+// --- Download Messages ---
+
+message DownloadFileRequest { string filename = 1; }
+
+message DownloadFileResponse { bytes chunk_data = 1; }
+
+// --- List Messages ---
+
+message FileMetadata {
+  string filename = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  uint64 size = 4; // File size in bytes
+}
+
+message ListFilesResponse { repeated FileMetadata files = 1; }

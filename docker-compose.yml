@@ -1,0 +1,15 @@
+services:
+  imageshare-server:
+    image: veotri/grpc-imageshare:v0.5.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: imageshare_server
+    ports:
+      - "${GRPC_PORT:-50051}:50051"
+    volumes:
+      - imageshare_uploads:/app/uploads
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    environment:
+      TZ: Etc/UTC
